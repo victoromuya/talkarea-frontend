@@ -3,24 +3,38 @@ import './App.css';
 import { useState, useEffect } from "react";
 import ArticleList from './components/ArticleList';
 import Form from './components/Form'
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+
 
 function App() {
 
   const [articles, setArticles] = useState([])
   const [editArticle, setEditArticle] = useState(null)
+  const [token, setToken, removeToken] = useCookies(['mytoken'])
 
 
   useEffect(() => {
     fetch('http://127.0.0.1:8000/api/articles/', {
       'method':'GET', headers:{
         'Content-type':'application/json',
-        'Authorization': 'Token 18037f43bc9ae2941d58d559de6b1c5e1425d7be'
+        'Authorization': `Token ${token['mytoken']}`
       }
     })
     .then(resp => resp.json())
     .then(resp =>setArticles(resp))
     .catch(error => console.log(error))
   }, [])
+
+
+  let history = useNavigate()
+
+    useEffect(() => {
+      if(!token['mytoken']){
+        // history('/') 
+        window.location.href = '/'
+      }
+    }, [token])
 
   const editbtn = (articles) =>{
     setEditArticle(articles)
@@ -59,6 +73,10 @@ function App() {
     setArticles(new_articles)
   }
 
+  const logoutBtn = () => {
+    removeToken(['mytoken'])
+  }
+
   
 
   return (
@@ -70,6 +88,10 @@ function App() {
         </div>
         <div className="col">
           <button className="btn btn-primary" onClick={insertArticleForm}>Insert Article</button>
+        </div>
+
+        <div className="col">
+          <button className="btn btn-primary" onClick={logoutBtn}>Logout</button>
         </div>
       </div>
 

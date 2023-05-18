@@ -1,38 +1,64 @@
 
 
 export default class APIService{
-    static UpdateArticle(article_id, body){
+    static UpdateArticle(article_id, body, token){
         return fetch(`http://127.0.0.1:8000/api/articles/${article_id}/`, {
              'method':'PUT',
              headers: {
                 'Content-type':'application/json',
-                'Authorization': 'Token 18037f43bc9ae2941d58d559de6b1c5e1425d7be'
+                'Authorization': `Token ${token}` 
              },
              body:JSON.stringify(body)
         }).then(resp => resp.json())
     }
 
-    static InsertArticle(body){
+    static InsertArticle(body, token){
 
         return fetch(`http://127.0.0.1:8000/api/articles/`, {
              'method':'POST',
              headers: {
                 'Content-type':'application/json',
-                'Authorization': 'Token 18037f43bc9ae2941d58d559de6b1c5e1425d7be'
+                'Authorization': `Token ${token}`
              },
              body:JSON.stringify(body)
         }).then(resp => resp.json())
 
     }
 
-    static DeleteArticle(article_id){
+    static DeleteArticle(article_id, token){
         return fetch(`http://127.0.0.1:8000/api/articles/${article_id}/`, {
              'method':'DELETE',
              headers: {
                 'Content-type':'application/json',
-                'Authorization': 'Token 18037f43bc9ae2941d58d559de6b1c5e1425d7be'
+                'Authorization': `Token ${token}`
              }
              
         }) 
+    }
+
+
+    static LoginUser(body){
+        return fetch(`http://127.0.0.1:8000/auth/`, {
+             'method':'POST',
+             headers: {
+                'Content-type':'application/json',
+                
+             },
+             body:JSON.stringify(body)
+             
+        }).then(resp => resp.json())
+    }
+
+
+    static RegisterUser(body){
+        return fetch(`http://127.0.0.1:8000/api/users/`, {
+             'method':'POST',
+             headers: {
+                'Content-type':'application/json',
+                
+             },
+             body:JSON.stringify(body)
+             
+        }).then(resp => resp.json())
     }
 }
